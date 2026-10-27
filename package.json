@@ -1,0 +1,71 @@
+{
+  "name": "study-desk",
+  "productName": "Study Desk",
+  "version": "1.0.0",
+  "description": "Track study time per topic, run pomodoros and plan tasks, with user accounts and a SQLite database.",
+  "main": "electron/main.js",
+  "license": "MIT",
+  "author": "SZhou",
+  "scripts": {
+    "start": "electron .",
+    "server": "node server/index.js",
+    "test": "node --test test/*.test.js",
+    "icon": "node scripts/make-icon.js",
+    "dist": "electron-builder --publish never",
+    "dist:win": "electron-builder --win --publish never",
+    "dist:mac": "electron-builder --mac --publish never"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.22.3",
+    "sql.js": "^1.15.2"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.studydesk.app",
+    "productName": "Study Desk",
+    "artifactName": "Study-Desk-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**",
+      "server/**",
+      "public/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "category": "public.app-category.education",
+      "identity": "-",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    }
+  }
+}
