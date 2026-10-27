@@ -2,14 +2,31 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Study Desk</title>
-<link rel="icon" href="icon.png">
+<link rel="icon" href="icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="style.css">
-</head><body><div class="wrap">
+</head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs><linearGradient id="lg" x1="100" y1="100" x2="924" y2="924" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2a8a72"/><stop offset="1" stop-color="#145446"/></linearGradient></defs>
+ <symbol id="logo" viewBox="100 100 824 824">
+  <rect x="100" y="100" width="824" height="824" rx="96" fill="url(#lg)"/>
+  <circle cx="512" cy="512" r="268" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="58"/>
+  <path d="M512 244A268 268 0 1 1 244 512" fill="none" stroke="#fff" stroke-width="58" stroke-linecap="round"/>
+  <path d="M362 430l134 24v162l-134-24zM662 430l-134 24v162l134-24z" fill="#fff"/>
+ </symbol>
+ <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+ <symbol id="i-bell-on" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M2 8c0-2.2.7-4.3 2-6M22 8a10 10 0 0 0-2-6"/></symbol>
+ <symbol id="i-pip" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><rect x="12" y="12" width="7" height="5" rx="1"/></symbol>
+ <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+</svg>
+<div class="wrap">
 <div id="auth" hidden></div>
 <div id="appv" hidden>
-<div class="row"><h1>Study Desk</h1><span class="sp"></span><button class="b who" data-tab="data" id="who" title="Account"></button></div>
-<div class="sub" id="date"></div>
-<div class="tools"><button class="b" id="nb" data-act="notify">🔔 Enable alerts</button><button class="b" data-act="popout">Pop out timer</button><span class="mut" id="msg"></span><span class="mut" id="sync"></span></div>
+<header class="hd"><svg class="mark" aria-hidden="true"><use href="#logo"/></svg><div><h1>Study Desk</h1><div class="sub" id="date"></div></div><span class="sp"></span><button class="who" data-tab="data" id="who" title="Account"></button></header>
+<div class="tools"><button class="b" id="nb" data-act="notify"></button><button class="b" data-act="popout"><svg class="ic"><use href="#i-pip"/></svg>Pop out timer</button><span class="mut" id="msg"></span><span class="mut" id="sync"></span></div>
 <nav id="nav"></nav><main id="main"></main>
 </div>
 </div>

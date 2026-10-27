@@ -17,13 +17,13 @@ async function targetUrl() { const c = readCfg(); return c.serverUrl || localUrl
 async function createWindow() {
   win = new BrowserWindow({
     width: 1000, height: 820, minWidth: 380, minHeight: 520,
-    title: 'Study Desk', backgroundColor: '#f3f5f0', autoHideMenuBar: true,
-    icon: path.join(__dirname, '..', 'public', 'icon.png'),
+    title: 'Study Desk', backgroundColor: '#f6f7f5', autoHideMenuBar: true,
+    icon: path.join(__dirname, '..', 'public', 'icons', 'android-chrome-512x512.png'),
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, sandbox: true, backgroundThrottling: false },
   });
   win.webContents.setWindowOpenHandler(({ url, frameName }) => {
     if (frameName === 'studydesk_timer') {
-      return { action: 'allow', overrideBrowserWindowOptions: { width: 300, height: 200, alwaysOnTop: true, minimizable: false, maximizable: false, fullscreenable: false, autoHideMenuBar: true, title: 'Study Desk timer', backgroundColor: '#1b2420' } };
+      return { action: 'allow', overrideBrowserWindowOptions: { width: 300, height: 200, alwaysOnTop: true, minimizable: false, maximizable: false, fullscreenable: false, autoHideMenuBar: true, title: 'Study Desk timer', backgroundColor: '#161c19' } };
     }
     if (/^https?:/i.test(url)) shell.openExternal(url);
     return { action: 'deny' };

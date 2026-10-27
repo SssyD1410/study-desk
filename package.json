@@ -1,7 +1,7 @@
 {
   "name": "study-desk",
   "productName": "Study Desk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Track study time per topic, run pomodoros and plan tasks, with user accounts and a SQLite database.",
   "main": "electron/main.js",
   "license": "MIT",

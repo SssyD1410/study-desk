@@ -1,6 +1,7 @@
 const COL=['#1f6f5c','#c8553d','#d9a21b','#3b6fb6','#8a4fa3','#2a9d8f','#e07a5f'];
 const QN=['Do first (urgent + important)','Schedule (important)','Delegate (urgent)','Eliminate (neither)'];
 const $=s=>document.querySelector(s);
+const I=n=>'<svg class="ic" aria-hidden="true"><use href="#i-'+n+'"/></svg>';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const blank=()=>({topics:[],log:[],run:null,pause:null,todos:[],notified:{},pomo:{focus:25,brk:5,topic:'',phase:'idle',end:0,count:0,day:''}});
 let S=blank(),REV=0,ME=null;
@@ -61,7 +62,7 @@ function vTasks(){
   <div class="bar"><i data-bar="${t.id}" style="width:${p}%;background:${t.color}"></i></div>
   <div class="row"><span class="mut" data-pct="${t.id}">${Math.round(p)}% of ${t.goal} min${p>=100?' · goal reached':''}</span><span class="sp"></span>
   ${run?`<button class="b" data-act="pause" data-id="${t.id}">Pause</button><button class="b" data-act="stop" data-id="${t.id}">Stop</button>`:pz?`<button class="b p" data-act="resume" data-id="${t.id}">Resume</button><button class="b" data-act="stop" data-id="${t.id}">Stop</button>`:`<button class="b p" data-act="start" data-id="${t.id}">Start</button>`}
-  <button class="x" data-act="delTopic" data-id="${t.id}" aria-label="Delete topic">×</button></div></div>`}
+  <button class="x" data-act="delTopic" data-id="${t.id}" aria-label="Delete topic">${I('x')}</button></div></div>`}
  return h}
 
 function vPomo(){
@@ -81,7 +82,7 @@ function vPomo(){
 
 function item(t){return `<div class="it ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} data-act="toggle" data-id="${t.id}" aria-label="Done">
  <span>${esc(t.text)}</span><select data-act="move" data-id="${t.id}" aria-label="Quadrant">${QN.map((n,i)=>`<option value="${i}" ${t.q===i?'selected':''}>${n.split(' (')[0]}</option>`).join('')}</select>
- <button class="x" data-act="delTodo" data-id="${t.id}" aria-label="Delete">×</button></div>`}
+ <button class="x" data-act="delTodo" data-id="${t.id}" aria-label="Delete">${I('x')}</button></div>`}
 
 function vMatrix(){
  let h='<div class="grid">';
@@ -218,7 +219,7 @@ function stopAll(){stopRun();S.pause=null;const p=S.pomo;if(p.phase==='focus'||p
 function startBreak(){clearAlert();const p=S.pomo;p.paused=false;p.phase='break';p.end=Date.now()+p.brk*6e4}
 function skipBreak(){clearAlert();S.pomo.phase='idle';S.pomo.paused=false}
 let pw=null;
-const POPCSS='body{margin:0;font:600 14px system-ui,sans-serif;background:#1b2420;color:#e6eee9;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:6px}#pt{font:700 44px Georgia,serif;font-variant-numeric:tabular-nums}#pl{color:#8fa197;font-weight:500}button{font:inherit;background:#5fc4a8;color:#0c1512;border:0;border-radius:8px;padding:6px 14px;cursor:pointer}button.s{background:#3a4a43;color:#e6eee9}.r{display:flex;gap:8px}';
+const POPCSS='body{margin:0;font:500 13px "Segoe UI",-apple-system,system-ui,sans-serif;background:#161c19;color:#e6ece9;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:8px}#pt{font-size:46px;font-weight:300;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}#pl{color:#8b9891}button{font:inherit;font-weight:600;background:#5fc4a8;color:#0b1410;border:0;border-radius:8px;padding:6px 14px;cursor:pointer}button.s{background:#262f2b;color:#e6ece9}.r{display:flex;gap:8px;margin-top:2px}';
 const msg=t=>{const m=$('#msg');if(m)m.textContent=t};
 let popB=[null,null];
 async function popout(){
@@ -235,7 +236,7 @@ async function popout(){
  updatePop();msg(pip||window.desktop?'Floating timer is on top of other windows.':'Timer opened in a small window.')}
 function updatePop(){
  if(!pw||pw.closed)return;
- try{const d=pw.document,p=S.pomo,now=Date.now(),nm=id=>topic(id)?.name||'';let lab,time,b1='',b2='',f1=null,f2=null,bg='#1b2420';
+ try{const d=pw.document,p=S.pomo,now=Date.now(),nm=id=>topic(id)?.name||'';let lab,time,b1='',b2='',f1=null,f2=null,bg='#161c19';
   if(alertState){lab=alertState.title;time='Time is up';bg='#8f2d1f';
    if(p.phase==='breakwait'){b1='Start break';f1=()=>ackAlert(true);b2='Skip break';f2=skipBreak}else{b1='OK';f1=()=>ackAlert(false)}}
   else if(p.phase==='breakwait'){lab='Break ready';time=fmt(p.brk*6e4);b1='Start break';f1=startBreak;b2='Skip break';f2=skipBreak}
@@ -253,10 +254,10 @@ function notify(t,b,kind){
  if(kind==='goal'){beep();msg(t+'. '+b);try{if('Notification' in window&&Notification.permission==='granted')new Notification(t,{body:b,tag:'sdgoal'})}catch(e){}return}
  alertState={title:t,body:b,kind};msg(t+'. '+b);beep();
  let n=0;clearInterval(aTimer);aTimer=setInterval(()=>{if(++n>10)clearInterval(aTimer);else beep()},2500);
- clearInterval(fTimer);let on=true;fTimer=setInterval(()=>{document.title=on?'⏰ '+t:'Study Desk';on=!on},900);
+ clearInterval(fTimer);let on=true;fTimer=setInterval(()=>{document.title=on?t:'Study Desk';on=!on},900);
  try{if('Notification' in window&&Notification.permission==='granted'){const nt=new Notification(t,{body:b,requireInteraction:true,tag:'studydesk',renotify:true,vibrate:[200,100,200]});nt.onclick=()=>{window.focus();nt.close()}}}catch(e){}
  let o=$('#ov');if(o)o.remove();o=document.createElement('div');o.id='ov';o.setAttribute('role','alertdialog');
- o.innerHTML=`<div class="ovc"><div class="ovi">⏰</div><h2>${esc(t)}</h2><p>${esc(b)}</p><div class="row" style="justify-content:center">${kind==='focus'?'<button class="b p" id="ob1">Start break</button><button class="b" id="ob2">Skip break</button>':'<button class="b p" id="ob1">OK</button>'}</div></div>`;
+ o.innerHTML=`<div class="ovc"><div class="ovi">${I('bell-on')}</div><h2>${esc(t)}</h2><p>${esc(b)}</p><div class="row" style="justify-content:center">${kind==='focus'?'<button class="b p" id="ob1">Start break</button><button class="b" id="ob2">Skip break</button>':'<button class="b p" id="ob1">OK</button>'}</div></div>`;
  document.body.appendChild(o);
  $('#ob1').onclick=()=>ackAlert(kind==='focus');
  const b2=$('#ob2');if(b2)b2.onclick=()=>{clearAlert();S.pomo.phase='idle';save();render()};
@@ -311,7 +312,7 @@ const names={tasks:'Topics',pomo:'Pomodoro',matrix:'Matrix',todo:'To-do',stats:'
 // ---- sign in / create account
 let authMode='login',authMsg='',canSignup=true;
 function vAuth(){const reg=authMode==='register';
- return `<div class="authc"><h1>Study Desk</h1><div class="sub">Track study time, run pomodoros and plan your tasks.</div>
+ return `<div class="authc"><div class="brand"><svg class="mark" aria-hidden="true"><use href="#logo"/></svg><h1>Study Desk</h1><div class="sub">Track study time, run pomodoros and plan your tasks.</div></div>
  <div class="card">${canSignup?`<div class="seg" style="margin-bottom:14px"><button type="button" class="${reg?'':'on'}" data-act="aMode" data-m="login">Sign in</button><button type="button" class="${reg?'on':''}" data-act="aMode" data-m="register">Create account</button></div>`:''}
  <form id="af" autocomplete="on"><label class="fl">Username<input type="text" name="username" id="aUser" autocomplete="username" required minlength="3" maxlength="32" autocapitalize="none" spellcheck="false"></label>
  <label class="fl">Password<input type="password" name="password" id="aPass" autocomplete="${reg?'new-password':'current-password'}" required ${reg?'minlength="8"':''}></label>
@@ -330,7 +331,7 @@ async function submitAuth(){const u=$('#aUser').value.trim(),p=$('#aPass').value
 async function enter(user){
  const r=await api('GET','/api/state');if(!r.ok){showAuth(r.data.error||'Could not load your data.');return}
  ME=user;adopt(r.data.state);REV=r.data.rev;dirty=false;tab='tasks';edit=null;
- $('#auth').hidden=true;$('#appv').hidden=false;$('#who').textContent=ME.username;render();startTicking()}
+ $('#auth').hidden=true;$('#appv').hidden=false;$('#who').innerHTML='<span class="av">'+esc(ME.username[0])+'</span>'+esc(ME.username);render();startTicking()}
 function signedOut(m){
  ME=null;clearTimeout(syncT);dirty=false;clearAlert();if(pw&&!pw.closed)try{pw.close()}catch(e){}pw=null;
  S=blank();REV=0;delArm=false;srvForm=false;$('#main').innerHTML='';msg('');setSync('');showAuth(m)}
@@ -346,7 +347,7 @@ function render(){
  $('#date').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
  $('#nav').innerHTML=Object.keys(names).map(k=>`<button class="${k===tab?'on':''}" data-tab="${k}">${names[k]}</button>`).join('');
  $('#main').innerHTML=views[tab]();
- const g='Notification' in window&&Notification.permission==='granted';$('#nb').textContent=g?'🔔 Alerts on':'🔔 Enable alerts'}
+ const g='Notification' in window&&Notification.permission==='granted';$('#nb').innerHTML=g?I('bell-on')+'Alerts on':I('bell')+'Enable alerts'}
 
 function tick(){
  if(!ME)return;
