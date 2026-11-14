@@ -1,8 +1,10 @@
 'use strict';
 const { contextBridge, ipcRenderer } = require('electron');
 
-// Lets the page choose between the built-in local server and a remote Study Desk server.
+// Desktop-only features for the page: server choice and starting at login.
 contextBridge.exposeInMainWorld('desktop', {
   getServer: () => ipcRenderer.invoke('server:get'),
   setServer: url => ipcRenderer.invoke('server:set', url),
+  getLogin: () => ipcRenderer.invoke('login:get'),
+  setLogin: on => ipcRenderer.invoke('login:set', on),
 });

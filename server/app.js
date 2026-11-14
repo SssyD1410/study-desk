@@ -36,6 +36,7 @@ const arr = v => Array.isArray(v) ? v : [];
 const num = (v, d) => Number.isFinite(+v) ? +v : d;
 const str = (v, n) => String(v == null ? '' : v).slice(0, n);
 function uniq(list) { const m = new Map(); for (const x of list) m.set(x.id, x); return [...m.values()]; }
+function validTz(z) { try { new Intl.DateTimeFormat('en-US', { timeZone: z }); return true; } catch (e) { return false; } }
 function cleanState(s) {
   s = s && typeof s === 'object' ? s : {};
   const topics = uniq(arr(s.topics).filter(t => t && ID_RE.test(t.id)).slice(0, 1000).map(t => ({
@@ -64,7 +65,13 @@ function cleanState(s) {
   if (s.notified && typeof s.notified === 'object') {
     for (const k of Object.keys(s.notified).slice(-300)) if (k.length <= 80) notified[k] = 1;
   }
-  return { topics, log, todos, prefs: { run, pause, pomo, notified } };
+  const st = s.settings && typeof s.settings === 'object' ? s.settings : {};
+  const settings = {
+    tz: typeof st.tz === 'string' && /^[A-Za-z0-9_+-/]{1,64}$/.test(st.tz) && validTz(st.tz) ? st.tz : '',
+    clock: ['auto', '12', '24'].includes(st.clock) ? st.clock : 'auto',
+    pop: ['float', 'top', 'bottom', 'corner'].includes(st.pop) ? st.pop : 'float',
+  };
+  return { topics, log, todos, prefs: { run, pause, pomo, notified, settings } };
 }
 
 function createApp({ db, publicDir = path.join(__dirname, '..', 'public'), localOnly = false, allowSignup = true }) {
@@ -206,7 +213,7 @@ function createApp({ db, publicDir = path.join(__dirname, '..', 'public'), local
       topics: db.all('SELECT id, name, goal, color FROM topics WHERE user_id = ? ORDER BY pos', [uid]),
       log: db.all('SELECT id, topic_id AS t, start_ms AS s, end_ms AS e FROM study_sessions WHERE user_id = ? ORDER BY start_ms', [uid]),
       todos: db.all('SELECT id, text, quadrant AS q, done FROM todos WHERE user_id = ? ORDER BY pos', [uid]).map(t => ({ ...t, done: !!t.done })),
-      run: p.run || null, pause: p.pause || null, pomo: p.pomo, notified: p.notified || {},
+      run: p.run || null, pause: p.pause || null, pomo: p.pomo, notified: p.notified || {}, settings: p.settings,
     };
   }
   const revOf = uid => db.get('SELECT rev FROM users WHERE id = ?', [uid]).rev;

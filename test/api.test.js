@@ -63,13 +63,19 @@ test('register, state sync, conflicts and logout', async () => {
   assert.equal(s.data.state.pomo.topic, 'math1');
   assert.equal((await a('GET', '/api/state?rev=1')).data.unchanged, true);
 
+  // settings round-trip; bad values fall back to defaults
+  await a('PUT', '/api/state', { baseRev: 1, state: state({ settings: { tz: 'Europe/Berlin', clock: '24', pop: 'bottom' } }) });
+  assert.deepEqual((await a('GET', '/api/state')).data.state.settings, { tz: 'Europe/Berlin', clock: '24', pop: 'bottom' });
+  await a('PUT', '/api/state', { baseRev: 2, state: state({ settings: { tz: 'Not/AZone', clock: 'x', pop: 'y' } }) });
+  assert.deepEqual((await a('GET', '/api/state')).data.state.settings, { tz: '', clock: 'auto', pop: 'float' });
+
   // stale write from another device is rejected and returns the newer state
-  const stale = await a('PUT', '/api/state', { baseRev: 0, state: state({ topics: [] }) });
+  const stale = await a('PUT', '/api/state', { baseRev: 1, state: state({ topics: [] }) });
   assert.equal(stale.status, 409);
   assert.equal(stale.data.state.topics.length, 1);
 
   // invalid records are dropped
-  await a('PUT', '/api/state', { baseRev: 1, state: state({ log: [{ id: 'x', t: 'math1', s: 5, e: 1 }, { id: '<bad>', t: 'math1', s: 1, e: 5 }] }) });
+  await a('PUT', '/api/state', { baseRev: 3, state: state({ log: [{ id: 'x', t: 'math1', s: 5, e: 1 }, { id: '<bad>', t: 'math1', s: 1, e: 5 }] }) });
   assert.equal((await a('GET', '/api/state')).data.state.log.length, 0);
 
   // another user cannot see alice's data

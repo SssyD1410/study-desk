@@ -19,9 +19,12 @@ The installers are not code-signed, so the first launch needs one extra step:
 
 ## Features
 
+- **Home start page:** the app opens on a summary of today: progress toward your goals, time studied, pomodoros, your day streak, quick-start buttons for each topic, urgent tasks and the last 7 days.
+- **Starts with your computer:** the desktop app shows a splash screen while it loads and, by default, opens when you sign in to your computer (turn this off under **Settings → Open at login**).
+- **Your time zone:** days, weeks, months and charts follow your time zone and daylight-saving changes. It uses your computer's zone automatically, or pick one under **Settings → Time zone**. You can also choose a 12-hour or 24-hour clock.
 - **Accounts:** sign up, sign in, sign out, change password (signs out your other devices), delete account.
 - **Topics:** daily goals with live timers, pause/resume, and a goal-reached alert.
-- **Pomodoro:** focus and break timers that count toward a topic, with loud alerts and a pop-out always-on-top timer.
+- **Pomodoro:** focus and break timers that count toward a topic, with loud alerts and a pop-out always-on-top timer. The pop-out timer can be a floating window, a full-width banner at the top or bottom of the screen, or a small card in the corner.
 - **Matrix and To-do:** one shared task list, sorted into urgent/important quadrants.
 - **Stats:** day timeline, week timeline or stacked bars, month and year calendars; add, edit and delete sessions by hand.
 - **Backup:** download or copy your data as JSON and restore it later. Backups from the original single-file Study Desk can be restored too.
@@ -65,6 +68,7 @@ Put the server behind HTTPS (for example Caddy, nginx or a hosting platform) bef
 ```bash
 npm install
 npm start          # run the desktop app
+STUDYDESK_USER_DATA=./devdata npm start   # run it with a separate data folder (also skips open-at-login)
 npm run server     # run only the web server
 npm test           # API tests
 npm run dist:win   # build the Windows installer into dist/
